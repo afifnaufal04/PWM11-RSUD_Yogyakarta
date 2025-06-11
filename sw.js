@@ -1,6 +1,8 @@
+// Event untuk menginstall Service Worker pertama kali
 self.addEventListener("install", async event => {
+  // Membuka cache atau membuat cache jika belum ada dengan nama "pwa-assets"
   const cache = await caches.open("pwa-assets");
-  // it stores all resources on first SW install
+  // Menambahkan file yang dapat diakses saat offline ke dalam cache
   cache.addAll([
     "./index.html",
     "./dokter.html",
@@ -39,10 +41,12 @@ self.addEventListener("install", async event => {
   ]); 
 });
 
+// Event untuk menjalankan Service Worker dengan mengambil file dari cache
 self.addEventListener("fetch", event => {
    event.respondWith(
+    // Mencari apakah file sudah ada dalam cache
      caches.match(event.request).then(cachedResponse => {
-	   // It can update the cache to serve updated content on the next request
+	   // Kembalikan file dari cache jika ada, jika tidak maka kembalikan file dari server
          return cachedResponse || fetch(event.request);
      }
    )
